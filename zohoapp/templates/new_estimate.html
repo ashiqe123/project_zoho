@@ -1,0 +1,393 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <div class="row  fixed-top " style="top: 7rem; margin-left: 18rem;" >
+          
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+
+
+
+    <div class="col-md-10 ">
+      
+<div class="row">
+  <div class="col-md-1 "><a class="text-white" ></a></div>
+          <input type="hidden" id="state" value="{{ company.state }}">
+</div>
+      <div style="height: 600px;width:1215px; overflow-y: scroll;">
+        <h3  class="mb-3  text-white  " style="font-size: 2rem;">New Invoice</h3>     
+       
+          <form action="{% url 'add' %}" method="post" enctype="multipart/form-data"  >
+            {% csrf_token %}
+            <fieldset class="form-group">
+    
+              </fieldset>
+            <div class="form-group row">
+              <label  class="col-sm-2 col-form-label">Name *</label>
+                <div class="col-sm-10 col-md-7 col-9" style="margin-left: -2.2rem;">
+                  <select class="" id="customer_sel" name="customer_name" style="width: 50%;height: 35px;">
+                    {% for cust in c %}
+                    <option value="{{cust.cx}}" data-pos="{{cust.placeofsupply}}">{{cust.cx}}</option>
+                    {% endfor %}
+                </select>
+                  
+                    
+                </div>      
+            </div>
+  <div class="form-group row">
+        <label  class="col-sm-2 col-form-label">Invoice#* <i class="fa fa-question-circle"></i></label>
+              <div class="col-sm-10 col-md-3 col-9" style="margin-left: -2.2rem;">
+                  <input required type="text" name="" class="form-control">
+             </div>
+</div>
+
+<div class="form-group row">
+      <label  class="col-sm-2 col-form-label">Order Number <i class="fa fa-question-circle"></i></label>
+            <div class="col-sm-10 col-md-3 col-9" style="margin-left: -2.2rem;">
+            <input required type="text" name="" class="form-control">
+                                  
+        </div>
+   </div>
+      
+     
+  
+  <div class="input-row form-group">
+    <label class="mr-3 ml-2" for="input-1">invoice Date</label>
+        <input  style="width: 21vw;margin-left: 4rem;" class="form-control" type="date" id="input-1">
+        <label for="input-2"class="mr-3 ml-2"> Terms</label>
+        <select style="width: 20vw;" class="form-control" name="" id="">
+            <option value="">net 5</option>
+            <option value="">net 5</option>
+        </select>
+
+        <label for="input-2"class="mr-3 ml-2"> Due Date</label>
+        <input style="width: 20vw;margin-right:5rem ;" class="form-control" type="date" id="input-2">
+      </div>
+ 
+    <div class="row ">
+        <div class="col-md-1 form-group">
+            <label for="">Mail ID</label>
+        </div>
+        <div  class="col-md-7 form-group">
+          <input class="form-control" style="width: 38%;height: 35px;" type="email" id="emailInput" name="email">
+        </div>
+    </div>
+
+   
+ <div class="container-fluid mb-2" style="width: 93vw;">
+        <div class="row">
+          <div class="col-md-10">
+ 
+            <table class="table  text-black" id="item_table" style="background-color: rgba(44, 44, 43, 0.8);" onchange="calc()">
+              <thead>
+                <tr class="text-white">
+                  <th>Product</th>
+                  <th>HSN</th>
+                  <th>Description</th>
+                  <th>MRP</th>
+                  <th>Quantity</th>
+                  <th>Tax (%)</th>
+                  <th>Total</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  
+                  <td> <div class='form-group'><select
+                    class='form-control  text-black  item_select itm'
+                    name='item[]' id='item1'>
+                    {% for i in p %}
+                    <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
+                    {% endfor %}
+                </select></div>
+
+                </td>
+
+                  <td><input style="width: 8vw;" class="form-control" type="text" name="hsn[]" /></td>
+
+                  <td class='text-right '><input style="width: 8vw;" type='text' id='desc1'
+                    class=' form-control  text-black text-right desc' name='desc[]'
+                    >
+            </td>
+
+                  <td class='text-right'><input style="width: 8vw;"  type='number' id='rate1'
+                    class=' form-control text-black text-right rate' name='rate[]'
+                    value='0.00'>
+            </td>
+
+                  <td class='text-right'><input style="width: 8vw;"  type='number' id='qty1'
+                    class=' form-control text-black text-right qty' name='qty[]'
+                    value='0.00' onchange="calc()" >
+            </td>
+                 
+            <td class='text-right'> <select style="width: 8vw;"  name='tax[]' id='tax1'
+              class='form-control  text-black text-right  tax'>
+              <option value=0>Non Taxable</option>
+              <option id='tgst1' value=0></option>
+              <option value=0>0% GST</option>
+              <option value=5>5% GST</option>
+              <option value=12>12% GST</option>
+              <option value=18>18% GST</option>
+              <option value=28>28% GST</option>
+              <option id='tigst1' value=0></option>
+              <option value=0>0% IGST</option>
+              <option value=5>5% IGST</option>
+              <option value=12>12% IGST</option>
+              <option value=18>18% IGST</option>
+              <option value=28>28% IGST</option>
+
+              <option value=0>Out of Scope(0%)</option>
+          </select></td>
+
+                  <td style="display: none;">
+                    <input type="text" name='taxamount1' id="taxamount1" class="form-control taxamount" />
+                </td>
+                <td class='text-right'><input style="width: 8vw;"  type='number' id='amount1'
+                        class=' form-control  text-black text-right amount' name='amount[]'
+                        value='0.00'></td>
+                <td class='text-center'><button type='button' id='del_btn1'
+                        class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
+                        style='width:30px'><i class='fa fa-times'></i></button></td>
+                  
+                </tr>
+              </tbody>
+            </table>
+
+            <button type="button" class="btn btn-sm text-white" style="background-color: rgb(60, 210, 30) ;"
+            id="add-row">Add Row</button>
+
+
+
+
+       
+</div>
+</div>
+</div>
+
+
+<div class="row" style="border-bottom: 1px solid white;">
+  <div class="col-sm-7 d-flex flex-column my-auto">
+  
+    <label for="">Customer Notes</label>
+    <textarea name="customer_note" id="" cols="8" rows="5"
+        placeholder=" info to the customer "></textarea>
+</div>
+<div class="col-sm-5">
+  <table class="table  text-white" style="background-color: rgba(39, 38, 38, 0.8);">
+      <tr>
+          <td>Sub Total</td>
+          <td></td>
+          <td><input type="number" id="subtotal" name="subtotal" value="0.00"
+                  class=" text-right"></td>
+      </tr>
+      <tr id="tr_igst" >
+          <td>IGST</td>
+          <td></td>
+          <td><input type="number" id='igst' name="igst" value="0.00"
+                  class=" text-right"></td>
+      </tr>
+      <tr   id="tr_cgst">
+          <td>CGST</td>
+          <td></td>
+          <td><input type="number" id='cgst' name="cgst" value="0.00"
+                  class="text-right cgst"></td>
+      </tr>
+      <tr  id="tr_sgst">
+          <td>SGST</td>
+          <td></td>
+          <td><input type="number" id='sgst' name="sgst" value="0.00"
+                  class=" text-right"></td>
+      </tr>
+      <tr>
+          <td>Tax Amount</td>
+          <td></td>
+          <td><input type="number" id="total_taxamount" name="total_taxamount" value="0.00"
+                  class=" text-right"></td>
+      </tr>
+     
+     
+      <tr>
+          <th>Total (&#x20B9;)</th>
+          <th></th>
+          <th><input type="number" id="total_with_tax" name="total_taxamount" value="0.00"
+                  class=" text-right"></th>
+      </tr>
+  </table>
+</div>
+</div>
+
+
+<div class="row mb-2" style="border-bottom: 1px solid white;">
+  <div class="col-md-8 d-flex flex-column w-60 text-black">
+    <label for="">Terms & Conditions</label>
+    <textarea name="tearms_conditions" id="" cols="20" rows="5"
+        placeholder=" Enter the terms & conditions of your business to be displayed in your transaction."></textarea>
+</div>
+<div class="col-md-4 py-5 text-center rounded" style="background-color: rgba(68, 67, 65, 0.8);">
+  <label class="text-white" for="">Attach File(s) to Estimate</label><br>
+  
+      Upload File
+      <input class="form-control" type="file" name="file" placeholder="Upload File">
+
+
+</div>
+</div>
+
+
+          <div class="form-inline">
+      <input type="submit"  class="mr-3 btn btn-success"  value="Save as Draft">
+
+      <input type="submit" class="btn btn-secondary but" value="Save and Send">
+
+      <input  type="submit" class="btn btn-secondary but ml-3" value="Cancel">
+          </div>
+
+        </form>
+        
+</div>
+
+          
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ============================ modal for account adding  -->
+
+
+
+
+          <div class="popup" id="popup">
+           <div style="margin-top: 2rem;" class="display-flex">
+            <h4 class="text-dark" >Add Account</h4>
+            <h6 class="float-right text-dark" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup()">X</h6>
+           </div>
+            
+            <form style="margin-top: 3rem;" action="{% url 'add_account' %}" method="post">
+              {% csrf_token %}
+              <label class="text-dark" >Accout type</label> <br>
+              <input required  type="text" name="acc_type" id=""> <br>
+              <label  class="text-dark" >Accout Name</label> <br>
+              <input required type="text" name="acc_name" id=""> <br>
+              <label class="text-dark" >Accout Code</label> <br>
+              <input type="text" name="acc_code" id=""> <br>
+              <label class="text-dark" >Accout Description</label> <br>
+              <input type="text" name="acc_desc" id=""> <br> <br>
+              <input  style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="submit"  value="submit">
+            <button style="width: 5rem; height: 2rem; color: black;"  class="btn btn-secondary" type="submit" onclick="closepopup()"  >Canvel</button>
+            </form>
+
+
+            <script>
+              let popup=document.getElementById("popup");
+
+              function openpopup(){
+                  popup.classList.add("open-popup");
+              }
+              function closepopup(){
+                  popup.classList.remove("open-popup");
+              }
+
+            </script>
+          </div>
+
+          <div class="popup-1" id="popup-1">
+            <div style="margin-top: 2rem;" class="display-flex">
+             <h4 class="text-dark" >Add Unit</h4>
+             <h6 class="float-right text-dark" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepop()">X</h6>
+            </div>
+             
+             <form style="margin-top: 3rem;" action="{% url 'add_unit' %}" method="post">
+               {% csrf_token %}
+               <label class="text-dark" >Unit</label> <br>
+               <input required  type="text" name="unit_name" id=""> <br>
+              
+               <br>
+               <input type="submit"  class="mr-3 btn btn-success"  value="Save">
+               <input type="submit" class="btn btn-secondary but" value="Cancel">
+           <p class="text-dark">eg:KL,PCS,BOX,LTR</p>
+            </form>
+      
+      
+             <script>
+               let popu=document.getElementById("popup-1");
+      
+               function openpop(){
+                popu.classList.add("open-popup-1");
+               }
+               function closepop(){
+                popu.classList.remove("open-popup-1");
+               }
+      
+             </script>
+           </div>
+
+
+           <div class="popup-2" id="popup-2">
+            <div style="margin-top: 2rem;" class="display-flex">
+             <h4 class="text-dark" >Add SALES</h4>
+             <h6 class="float-right text-dark" style="margin-right: 1rem; margin-top: -2rem;" onclick="closep()">X</h6>
+            </div>
+             
+            <form style="margin-top: 3rem;" action="{% url 'add_sales' %}" method="post">
+              {% csrf_token %}
+              <label class="text-dark" >Accout type</label> <br>
+              <input  required type="text" name="acc_type" id=""> <br>
+              <label class="text-dark" >Accout Name</label> <br>
+              <input required type="text" name="acc_name" id=""> <br>
+              <label class="text-dark" >Accout Code</label> <br>
+              <input type="text" name="acc_code" id=""> <br>
+              <label class="text-dark" >Accout Description</label> <br>
+              <input type="text" name="acc_desc" id=""> <br> <br>
+              <input  style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="submit"  value="submit">
+            <button style="width: 5rem; height: 2rem; color: black;"  class="btn btn-secondary" type="submit" onclick="closep()"  >Canvel</button>
+            </form>
+
+      
+      
+             <script>
+               let pop=document.getElementById("popup-2");
+      
+               function openp(){
+                pop.classList.add("open-popup-2");
+               }
+               function closep(){
+                pop.classList.remove("open-popup-2");
+               }
+      
+             </script>
+           </div>
+
+    </div>
+  </div>
+ 
+</section>
+
+   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+ 
+{% endblock %}

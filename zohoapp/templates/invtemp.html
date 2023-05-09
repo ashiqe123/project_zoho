@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+</head>
+
+          <style>
+            
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin: 0;
+    }
+    
+    header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    }
+    
+    .logo img {
+    max-height: 100px;
+    }
+    
+    .company-info h2 {
+    margin: 0;
+    font-size: 2em;
+    }
+    
+    .company-info p {
+    margin: 0;
+    line-height: 1.5;
+    }
+    
+    .i.invoice-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    
+    .invoice-box h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    }
+    
+    .invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    }
+    
+    .invoice-details p, .client-details p {
+    margin: 5px 0;
+    }
+    
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    }
+    
+    th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    }
+    
+    #th {
+    background-color: #f2f2f2;
+    }
+    
+    .invoice-total {
+    margin-top: 20px;
+    text-align: right;
+    }
+    
+    .invoice-total p {
+    margin: 5px 0;
+    }
+    
+    footer {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    text-align: center;
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 20px;
+    }
+    
+    footer p {
+    margin: 5px 0;
+    }
+    
+    
+          </style>
+          <body>
+            <div style="overflow-y: scroll;height: 600px;">
+                
+                <section id="selected-area" style="background-color: rgb(255, 221, 176);"class="p-3">
+            <header style="	background-color: #8b3131;border-radius: 1rem;">
+                <div class="logo ">
+                    <img class="ml-2" width="100rem" style="border-radius: 50%;" src="{% static 'images/zlogo.png' %}" alt="Company Logo">
+                </div>
+                <div style="background: #8b3131;color: black;" class="company-info">
+                    <h2 class="text-white">ZoHo</h2>
+                    <p class="text-white">Carnival infopark<br>Kochi Eranamkulam<br>Phone:  0492-2556533<br>Email: info@zohoinfopark.com</p>
+                </div>
+            </header>
+            <div class="invoice-box">
+                <h1 class="text-dark">Invoice</h1>
+                <div class="invoice-header">
+                    <div class="invoice-details text-dark">
+                        <p class="text-dark">Invoice #: 12345</p>
+                        <p class="text-dark">Invoice Date: 01/01/2023</p>
+                    </div>
+                    <div class="client-details">
+                        <p class="text-dark">Client Name: John Smith</p>
+                        <p class="text-dark">Address: 456 Oak Street<br>Anytown, USA 12345</p>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="th">Description</th>
+                            <th id="th">Quantity</th>
+                            <th id="th">Price</th>
+                            <th id="th"> Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Item 1</td>
+                            <td>2</td>
+                            <td>$50.00</td>
+                            <td>$100.00</td>
+                        </tr>
+                        <tr>
+                            <td>Item 2</td>
+                            <td>1</td>
+                            <td>$100.00</td>
+                            <td>$100.00</td>
+                        </tr>
+                        <tr>
+                            <td>Item 3</td>
+                            <td>3</td>
+                            <td>$25.00</td>
+                            <td>$75.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="invoice-total">
+                    <p class="text-dark">Subtotal: $275.00</p>
+                    <p class="text-dark">Tax: $27.50</p>
+                    <p class="text-dark">Total: $302.50</p>
+                </div>
+            </div>
+            <footer class="mb-5">
+                <p class="text-dark">&copy; ABC Company 2023 | 123 Main Street, Anytown, USA 12345 | Phone: (123) 456-7890 | Email: info@abccompany.com</p>
+            </footer>
+            <div class="mt-5 mb-5">
+    
+            </div>
+           </section>
+    
+
+
+    
+    
+     </div>
+    
+</body>
+</html>
