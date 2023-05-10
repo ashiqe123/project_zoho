@@ -24,16 +24,13 @@ urlpatterns = [
     path('sales',views.add_sales,name='add_sales'),
     # ==================second portion====================================
     path('invoiceview',views.invoiceview,name='invoiceview'),
-    path('addinvoice',views.addinvoice,name='addinvoice'),
     path('itemdata',views.itemdata,name='itemdata'),
     path('add_prod',views.add_prod,name='add_prod'),
     path('detailedview/<int:id>',views.detailedview,name='detailedview'),
     path('edited_prod/<int:id>',views.edited_prod,name='edited_prod'),
     path('dele/<int:pk>',views.dele,name='dele'),
-    path('edited/<int:id>',views.edited,name='edited'),
     path('payment_term',views.payment_term,name='payment_term'),
     path('add_cx',views.add_cx,name="add_cx"),
-
     path('emailattachment', EmailAttachementView.as_view(), name='emailattachment'),
    
 

@@ -372,17 +372,26 @@ def payment_term(request):
             mapped = zip(term,day)
             mapped = list(mapped)
             for ele in mapped:
-                created = payment.objects.get_or_create(term=ele[0],days=ele[1])
-                return redirect('addinvoice')
-        return redirect("add_customer")
+                created = payment_terms.objects.get_or_create(Terms=ele[0],Days=ele[1])
+            return redirect('add_prod')
+    return redirect("add_customer")
 
 @login_required(login_url='login')
 
 def invoiceview(request):
     invoicev=invoice.objects.all()
     
+    if not payment_terms.objects.filter(Terms='net 15').exists(): 
+       payment_terms(Terms='net 15',Days=15).save()
+    if not payment_terms.objects.filter(Terms='due end of month').exists():
+        payment_terms(Terms='due end of month',Days=60).save()
+    elif not  payment_terms.objects.filter(Terms='net 30').exists():
+        payment_terms(Terms='net 30',Days=30).save() 
+    
+    
     context={
         'invoice':invoicev,
+        
     }
     return render(request,'invoiceview.html',context)
 
@@ -413,54 +422,33 @@ def dele(request,pk):
     d.delete()
     return redirect('invoiceview')
 
-@login_required(login_url='login')
-
-def addinvoice(request):
-    c=customer.objects.all()
-    p=AddItem.objects.all()
-    i=invoice.objects.all()
-    pay=payment.objects.all()
-    if not payment.objects.filter(term='net 15').exists(): 
-       payment(term='net 15',days=15).save()
-    if not payment.objects.filter(term='due end of month').exists():
-        payment(term='due end of month',days=60).save()
-    elif not  payment.objects.filter(term='net 30').exists():
-        payment(term='net 30',days=30).save() 
-    
-
-
-    
-            
-            
-            
-            
-    context={
-        'c':c,
-        'p':p,
-        'i':i,
-        'pay':pay,
-        
-    }
-       
-    return render(request,'createinvoice.html',context)
 
 
 @login_required(login_url='login')
 
 def add_prod(request):
+    c=customer.objects.all()
+    p=AddItem.objects.all()
+    i=invoice.objects.all()
+    pay=payment_terms.objects.all()
+    if not payment_terms.objects.filter(Terms='net 15').exists(): 
+       payment_terms(Terms='net 15',Days=15).save()
+    if not payment_terms.objects.filter(Terms='due end of month').exists():
+        payment_terms(Terms='due end of month',Days=60).save()
+    elif not  payment_terms.objects.filter(Terms='net 30').exists():
+        payment_terms(Terms='net 30',Days=30).save() 
+    
+    
+   
     if request.user.is_authenticated:
         if request.method=='POST':
-            u=request.user.id
             c=request.POST['cx_name']
-            cx_mail=request.POST['cx_mail']
             cus=customer.objects.get(customerName=c) 
-            print(cus.id)
-            customer(id=cus.id,customerName=c,customerEmail=cx_mail,user_id=u).save()
-        
-            
+            print(cus.id)  
+            custo=cus.id
             invoice_no=request.POST['inv_no']
             terms=request.POST['term']
-            term=payment.objects.get(id=terms)
+            term=payment_terms.objects.get(id=terms)
             order_no=request.POST['ord_no']
             inv_date=request.POST['inv_date']
             due_date=request.POST['due_date']
@@ -492,9 +480,9 @@ def add_prod(request):
             desc=request.POST.getlist('desc[]')
             tax=request.POST.getlist('tax[]')
             total=request.POST.getlist('amount[]')
-            term=payment.objects.get(id=term.id)
+            term=payment_terms.objects.get(id=term.id)
 
-            inv=invoice(customer_id=cus.id,invoice_no=invoice_no,terms=term,order_no=order_no,inv_date=inv_date,due_date=due_date,
+            inv=invoice(customer_id=custo,invoice_no=invoice_no,terms=term,order_no=order_no,inv_date=inv_date,due_date=due_date,
                         cxnote=cxnote,subtotal=subtotal,igst=igst,cgst=cgst,sgst=sgst,t_tax=totaltax,
                         grandtotal=t_total,status=status,terms_condition=tc,file=file)
             inv.save()
@@ -507,9 +495,14 @@ def add_prod(request):
                     created = invoice_item.objects.get_or_create(inv=inv_id,product=element[0],hsn=element[1],
                                         quantity=element[2],desc=element[3],tax=element[4],total=element[5],rate=element[6])
                     
-                return redirect('addinvoice')
-                    
-        return render(request,'createinvoice.html')
+                return redirect('invoiceview')
+    context={
+            'c':c,
+            'p':p,
+            'i':i,
+            'pay':pay,
+    }       
+    return render(request,'createinvoice.html',context)
 
 
 @login_required(login_url='login')
@@ -517,7 +510,7 @@ def add_prod(request):
 def add_payment(request):
     if request.method=='POST':
             terms=request.POST.get()
-    return redirect('addinvoice')
+    return redirect('add_prod')
 
 
 @login_required(login_url='login')
@@ -534,7 +527,7 @@ def add_cx(request):
                 state=request.POST.get('state')
                 com_name=request.POST.get('company')
                 customer(customerName=name,customerEmail=email,placeofsupply=pos,state=state,companyName=com_name,user_id=user.id).save()
-        return redirect('addinvoice')
+        return redirect('add_prod')
 
 
 
@@ -546,23 +539,18 @@ def edited_prod(request,id):
     p = AddItem.objects.all()
     invoiceitem = invoice_item.objects.filter(inv_id=id)
     invoic = invoice.objects.get(id=id)
-    pay=payment.objects.all()
+    pay=payment_terms.objects.all()
   
     if request.method == 'POST':
-       
-   
-        c = request.POST['cx_name']
-        cx_mail = request.POST['cx_mail']
-        cus = customer.objects.get(customerName=c) 
-        cust = customer.objects.get(id=cus.id)
-        cx_name = c
-        cx_mail =cx_mail
+        u=request.user.id
+        c=request.POST['cx_name']
+        
+        cust=customer.objects.get(customerName=c) 
+        invoic.customer=cust
         term=request.POST['term']
-        print(term)
-        invoic.customer = customer.objects.get(id=cust.id)       
-        invoic.customer.customerName = cx_name
-        invoic.customer.customerEmail = cx_mail
-        invoic.terms = payment.objects.get(id=term)
+        
+        
+        invoic.terms = payment_terms.objects.get(id=term)
         invoic.inv_date = request.POST['inv_date']
         invoic.due_date = request.POST['due_date']
         invoic.cxnote = request.POST['customer_note']

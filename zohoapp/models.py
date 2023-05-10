@@ -117,15 +117,15 @@ class customer(models.Model):
     CPskype=models.CharField(max_length=100,null=True,blank=True)
     CPdesignation=models.CharField(max_length=100,null=True,blank=True)
     CPdepartment=models.CharField(max_length=100,null=True,blank=True)
-    
-class payment(models.Model):
-    term=models.TextField(max_length=255)
-    days=models.TextField(max_length=255)
+
+class payment_terms(models.Model):
+    Terms=models.CharField(max_length=100,null=True,blank=True)
+    Days=models.IntegerField(null=True,blank=True)
     
 class invoice(models.Model):
     customer=models.ForeignKey(customer,on_delete=models.CASCADE)
     invoice_no=models.TextField(max_length=255)
-    terms=models.ForeignKey(payment,on_delete=models.CASCADE)
+    terms=models.ForeignKey(payment_terms,on_delete=models.CASCADE)
     order_no=models.IntegerField()
     inv_date=models.DateField()
     due_date=models.DateField()

@@ -42,6 +42,7 @@
         <div class="col-sm-2"><label for="customer_name">Customer Name*</label></div>
         <div class="col-sm-10">
             <select  class="my-select" id="customer_sel" name="cx_name" style="width: 50%;height: 35px;">
+                <option value="i.id" selected>{{i.customer.customerName}}</option>
                 {% for cust in c %}
                 <option value="{{cust.customerName}}" data-pos="{{cust.placeofsupply}}">{{cust.customerName}}</option>
                 {% endfor %}
@@ -52,24 +53,7 @@
     <div class="modal modal-1" style="background-color: black;top:7rem">
       
       </div>
-      <script>
-        const selectEl = document.querySelector('.my-select');
-        selectEl.addEventListener('change', () => {
-          const selectedOption = selectEl.value;
-          const modalEl = document.querySelector(`.modal.${selectedOption}`);
-          modalEl.style.display = 'block';
-        });
-      
-        // Close the modal when the user clicks outside of it
-        const modalEls = document.querySelectorAll('.modal');
-        modalEls.forEach((modalEl) => {
-          modalEl.addEventListener('click', (event) => {
-            if (event.target === modalEl) {
-              modalEl.style.display = 'none';
-            }
-          });
-        });
-      </script>
+
     <div class="row mb-4">
         <div class="col-sm-2"><label for="estimate_number">Invoice#*</label></div>
         <div class="col-sm-10"><input type="text" id="estimate_number" name="inv_no" value="{{i.invoice_no}}"
@@ -85,19 +69,19 @@
 
  
   
-    <div class="input-row mb-4">
+    <div class="input-row mb-4 form-inline">
       <label class="mr-3 " for="input-1">invoice Date</label>
-          <input value="{{i.inv_date |date:'Y-m-d'}}"  style="width: 28%;height: 35px;margin-left: 6rem;" type="date" name="inv_date" id="input-1">
+          <input value="{{i.inv_date |date:'Y-m-d'}}"  style="width: 18%;height: 35px;margin-left: 6rem;" type="date" name="inv_date" id="input-1">
           <label for="input-2"class="mr-3 "> Terms</label>
-          <select style="width: 28%;height: 35px;"  name="term" id="">
+          <select style="width: 18%;height: 35px;"  name="term" id="">
             {% for p in pay %}
 
-            <option style="color: black;" value="{{p.id}}">{{p.term}}</option>
+            <option style="color: black;" value="{{p.id}}">{{p.Terms}}</option>
             {% endfor %}
           </select>
   
           <label for="input-2"class="mr-3 ml-2"> Due Date</label>
-          <input style="width: 28%;height: 35px;" class="form-control" value="{{i.due_date|date:'Y-m-d'}}" name="due_date" type="date" id="input-2">
+          <input style="width: 18%;height: 35px;" class="form-control" value="{{i.due_date|date:'Y-m-d'}}" name="due_date" type="date" id="input-2">
         </div>
         <div class="row mb-4">
           <div class="col-sm-2"><label for="estimate_number">Customer Mail</label></div>
@@ -338,7 +322,7 @@
                 </td>
                 <td class='text-right'><input type='text' id='hsn${RowCount}'style="width: 8rem;"
                   class='form-control border-0 text-black text-right hsn' name='hsn[]'
-                  value='INV-001'  >
+                  value=''  >
                 </td>
                 <td class='text-right'><input type='number' id='qty${RowCount}'
                         class='form-control border-0 text-black text-right qty'style="width: 8rem;" name='quantity[]' value='0.00' onchange="calc()">
@@ -452,6 +436,7 @@ function calc() {
             var pos = $("#customer_sel option:selected").data("pos");
             var state = document.getElementById("state").value;
             d=0
+
             if(pos==state){
                 
                 gst = taxamount / 2;
@@ -487,7 +472,6 @@ function calc() {
         });
     });
 
-
 function test(taxamount) {
         console.log('test333');
         console.log(taxamount)
@@ -498,6 +482,7 @@ function test(taxamount) {
         console.log('state')
         console.log(state)
         console.log('state')
+        console.log('----------')
         if (pos == state) {
             console.log(pos);
             console.log(state);
@@ -565,6 +550,7 @@ function test(taxamount) {
                     document.getElementById('desc1').value = data4
                     document.getElementById('state').value = data5
                     document.getElementById('cx_mail').value = data6
+                
                     if (data3 == '{{ company.state }}') {
                         document.getElementById('tgst1').innerHTML = data1 + ' % GST';
                         document.getElementById('tgst1').value = data1
@@ -595,11 +581,15 @@ function test(taxamount) {
                     data1 = response.gst
                     data2 = response.igst
                     data3 = response.pos
+                    data5 = response.place
                     data4 = response.desc
+                    data6 = response.mail
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate2').value = data
                     document.getElementById('desc2').value = data4
+                    document.getElementById('state').value = data5
+                    document.getElementById('cx_mail').value = data6
                     if (data3 == '{{ company.state }}') {
                         document.getElementById('tgst2').innerHTML = data1 + ' % GST';
                         document.getElementById('tgst2').value = data1
@@ -630,17 +620,21 @@ function test(taxamount) {
                     data1 = response.gst
                     data2 = response.igst
                     data3 = response.pos
+                    data5 = response.place
                     data4 = response.desc
+                    data6 = response.mail
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate3').value = data
                     document.getElementById('desc3').value = data4
+                    document.getElementById('state').value = data5
+                    document.getElementById('cx_mail').value = data6
                     if (data3 == '{{ company.state }}') {
                         document.getElementById('tgst3').innerHTML = data1 + ' % GST';
                         document.getElementById('tgst3').value = data1
                     }
-                    document.getElementById('tigst2').innerHTML = data2 + ' % IGST';
-                    document.getElementById('tigst2').value = data2
+                    document.getElementById('tigst3').innerHTML = data2 + ' % IGST';
+                    document.getElementById('tigst3').value = data2
 
                 }
             });
@@ -666,11 +660,15 @@ function test(taxamount) {
                     data1 = response.gst
                     data2 = response.igst
                     data3 = response.pos
+                    data5 = response.place
                     data4 = response.desc
+                    data6 = response.mail
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
-                    document.getElementById('4').value = data
+                    document.getElementById('rate4').value = data
                     document.getElementById('desc4').value = data4
+                    document.getElementById('state').value = data5
+                    document.getElementById('cx_mail').value = data6
                     if (data3 == '{{ company.state }}') {
                         document.getElementById('tgst4').innerHTML = data1 + ' % GST';
                         document.getElementById('tgst4').value = data1
@@ -702,11 +700,15 @@ function test(taxamount) {
                     data1 = response.gst
                     data2 = response.igst
                     data3 = response.pos
+                    data5 = response.place
                     data4 = response.desc
+                    data6 = response.mail
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate5').value = data
                     document.getElementById('desc5').value = data4
+                    document.getElementById('state').value = data5
+                    document.getElementById('cx_mail').value = data6
                     if (data3 == '{{ company.state }}') {
                         document.getElementById('tgst5').innerHTML = data1 + ' % GST';
                         document.getElementById('tgst5').value = data1
@@ -738,11 +740,15 @@ function test(taxamount) {
                     data1 = response.gst
                     data2 = response.igst
                     data3 = response.pos
+                    data5 = response.place
                     data4 = response.desc
+                    data6 = response.mail
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate6').value = data
                     document.getElementById('desc6').value = data4
+                    document.getElementById('state').value = data5
+                    document.getElementById('cx_mail').value = data6
                     if (data3 == '{{ company.state }}') {
                         document.getElementById('tgst6').innerHTML = data1 + ' % GST';
                         document.getElementById('tgst6').value = data1
@@ -775,11 +781,15 @@ function test(taxamount) {
                     data1 = response.gst
                     data2 = response.igst
                     data3 = response.pos
+                    data5 = response.place
                     data4 = response.desc
+                    data6 = response.mail
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate7').value = data
                     document.getElementById('desc7').value = data4
+                    document.getElementById('state').value = data5
+                    document.getElementById('cx_mail').value = data6
                     if (data3 == '{{ company.state }}') {
                         document.getElementById('tgst7').innerHTML = data1 + ' % GST';
                         document.getElementById('tgst7').value = data1
@@ -876,13 +886,15 @@ function test(taxamount) {
 
 
 
-  
+
       </div>
     </div>
    
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
   </section>
-  
-    
+
 {% endblock %}
 
 
