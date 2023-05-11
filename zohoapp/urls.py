@@ -33,6 +33,7 @@ urlpatterns = [
     path('add_cx',views.add_cx,name="add_cx"),
     path('emailattachment', EmailAttachementView.as_view(), name='emailattachment'),
    
-
+path('allestimates',views.allestimates,name='allestimates'),
+path('newestimate',views.newestimate,name='newestimate'),
     
 ]

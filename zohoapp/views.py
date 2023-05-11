@@ -657,7 +657,12 @@ def itemdata(request):
 
 
 
+def allestimates(request):
+    pass
 
+
+def newestimate(request):
+    pass
 
 
 
