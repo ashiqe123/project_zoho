@@ -15,7 +15,7 @@
 </div>
 
 
-<div style="overflow-y: scroll;height: 600px;">
+<div style="overflow-y: scroll;height: 600px;width: 75rem;">
   <form method="post" action="{% url 'add_prod' %}" class="p-5">
     {% csrf_token %}
     <div class="row mb-4 border-top pt-5">
@@ -104,59 +104,20 @@
                         </select></div>
                 </td>
                
-                <td class='text-right'><input type='text' 
-                  class='form-control border-0 text-black text-right ' name='hsn[]'
-                  value='' style="width: 8rem;"  >
+                <td class='text-right'><input type='text' id='hsn1'style="width: 8rem;"
+                  class='form-control border-0 text-black text-right hsn' name='hsn[]'
+                  value=''  >
                 </td>
-                <style>
-                    .is-invalid {
-                      border-color: red;
-                    }
-                  </style>
-                  <script>
-                    var inputField = document.querySelector('input[name="hsn[]"]');
-                    var tickmark = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="#28a745"><path d="M15.23 3.3a1.08 1.08 0 0 0-1.46.1L6.45 11.6 2.23 7.37A1.08 1.08 0 1 0 .77 8.83l5.16 5.16a1.08 1.08 0 0 0 1.46.1l8.46-7.87a1.08 1.08 0 0 0-.1-1.56z"></path></svg>';
-                    
-                    function validateHsn() {
-                      var inputValue = inputField.value.trim();
-                      
-                      if (inputValue.length === 6 && /^\d+$/.test(inputValue)) {
-                        inputField.classList.remove('is-invalid');
-                        inputField.classList.add('is-valid');
-                        inputField.insertAdjacentHTML('afterend', tickmark);
-                      } else if (inputValue.length < 6) {
-                        inputField.classList.remove('is-invalid');
-                        inputField.classList.remove('is-valid');
-                        inputField.nextElementSibling && inputField.nextElementSibling.remove();
-                      } else {
-                        inputField.classList.add('is-invalid');
-                        inputField.classList.remove('is-valid');
-                        inputField.insertAdjacentHTML('afterend', '<div class="invalid-feedback">Code should be less than 7 digits</div>');
-                      }
-                    }
-                    
-                    inputField.addEventListener('input', function() {
-                      var inputValue = inputField.value.trim();
-                      
-                      if (inputValue.length > 6) {
-                        inputField.value = inputValue.substr(0, 6);
-                        inputField.classList.add('is-invalid');
-                        inputField.classList.remove('is-valid');
-                        inputField.insertAdjacentHTML('afterend', '<div class="invalid-feedback">Code should be less than 7 digits</div>');
-                      } else {
-                        validateHsn();
-                      }
-                    });
-                    
-                    document.querySelector('form').addEventListener('submit', function(event) {
-                      validateHsn();
-                      
-                      if (inputField.classList.contains('is-invalid')) {
-                        event.preventDefault(); // prevent the form from submitting
-                      }
-                    });
-                  </script>
-                  
+           <script>
+                 $(document).on("input", ".hsn", function() {
+                  var hsn_value = $(this).val();
+                  var hsn_length = hsn_value.length;
+                  if (hsn_length > 7) {
+                      $(this).val(hsn_value.substring(0, 7));
+                      alert("HSN should not be more than 7 digits!");
+                  }
+              });
+           </script>
                   
 
                 <td class='text-right'><input type='number' id='qty1'
@@ -174,19 +135,14 @@
                 </td>
                 <td class='text-right'> <select name='tax[]' id='tax1'style="width: 8rem;"
                         class='form-control  text-black text-right border-0 tax'>
-                        <option value=0>Non Taxable</option>
-                        <option value=0>0% GST</option>
-                        <option value=5>5% GST</option>
-                        <option value=12>12% GST</option>
-                        <option value=18>18% GST</option>
-                        <option value=28>28% GST</option>
-                        <option value=0>0% IGST</option>
-                        <option value=5>5% IGST</option>
-                        <option value=12>12% IGST</option>
-                        <option value=18>18% IGST</option>
-                        <option value=28>28% IGST</option>
-  
-                        <option value=0>Out of Scope(0%)</option>
+                     
+                        <option >Select Tax</option>
+                        <option value="5">GST/IGST 5%</option>
+                        <option value="12">GST/IGST 12%</option>
+                        <option value="18">GST/IGST 18%</option>
+                        <option value="28">GST/IGST 28%</option>
+                     
+                    
                     </select></td>
                 <td style="display: none;">
                     <input type="text" name='taxamount1' id="taxamount1" class="form-control taxamount" />
@@ -201,6 +157,8 @@
         </tbody>
   
     </table>
+
+
     <button type="button" class="btn btn-success  text-white" style="background-color: rgb(6, 122, 6) ;"
         id="add-row">Add Row</button>
   
@@ -503,10 +461,46 @@ modalEl.addEventListener('click', (event) => {
 });
 </script>  
 
+<script>
+  function validateHSN(hsnInput) {
+    var hsn = hsnInput.value;
+    var errorSpan = hsnInput.nextElementSibling;
+    var valid = true;
 
+    if (hsn.length != 7) {
+        errorSpan.innerHTML = "HSN must be 7 digits long";
+        valid = false;
+    } else {
+        errorSpan.innerHTML = "&#x2713;"; // Check mark
+    }
 
+    return valid;
+}
+
+</script>
+<style>
+  .hsn-validation {
+    font-size: 1.2em;
+    color: red;
+}
+
+.hsn-validation::before {
+    display: inline-block;
+    content: attr(data-content);
+    width: 1em;
+    height: 1em;
+    margin-right: 0.2em;
+    text-align: center;
+    vertical-align: middle;
+    color: green;
+}
+
+</style>
 <script>
      $(document).ready(function () {
+
+
+
         $('#add-row').click(function () {
             var table = document.getElementById("item_table");
             var RowCount = table.rows.length;
@@ -523,10 +517,10 @@ modalEl.addEventListener('click', (event) => {
                             {% endfor %}
                         </select></div>
                 </td>
-                <td class='text-right'><input type='text' id='hsn${RowCount}'style="width: 8rem;"
-                  class='form-control border-0 text-black text-right hsn' name='hsn[]'
-                  value=''  >
-                </td>
+                <td class='text-right'>
+            <input type='text' id='hsn${RowCount}' style="width: 8rem;" class='form-control border-0 text-black text-right hsn' name='hsn[]' value='' onchange="validateHSN(this)">
+            <span class='hsn-validation'></span>
+        </td>
                 <td class='text-right'><input type='number' id='qty${RowCount}'
                         class='form-control border-0 text-black text-right qty'style="width: 8rem;" name='quantity[]' value='0.00' onchange="calc()">
                 </td>
@@ -538,20 +532,12 @@ modalEl.addEventListener('click', (event) => {
                 </td>
                 <td class='text-right'> <select name='tax[]'style="width: 8rem;" id='tax${RowCount}'
                         class="form-control  text-black text-right border-0 tax">
-                        <option value=0>Non Taxable</option>
-                                    <option id='tgst${RowCount}' value=0 ></option>
-                                    <option value=0>0% GST</option>
-                                    <option value=5>5% GST</option>
-                                    <option value=12>12% GST</option>
-                                    <option value=18>18% GST</option>
-                                    <option value=28>28% GST</option>
-                                    <option id='tigst${RowCount}' value=0 ></option>
-                                    <option value=0>0% IGST</option>
-                                    <option value=5>5% IGST</option>
-                                    <option value=12>12% IGST</option>
-                                    <option value=18>18% IGST</option>
-                                    <option value=28>28% IGST</option>
-                                    <option value=0>Out of Scope(0%)</option>
+                        <option >Select Tax</option>
+                        <option value="5">GST/IGST 5%</option>
+                        <option value="12">GST/IGST 12%</option>
+                        <option value="18">GST/IGST 18%</option>
+                        <option value="28">GST/IGST 28%</option>
+                       
                     </select></td>
                 <td style="display: none;">
                     <input type="text" name='taxamount1' id="taxamount${RowCount}" class="form-control taxamount" />
@@ -562,6 +548,15 @@ modalEl.addEventListener('click', (event) => {
                         class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
                         style='width:30px'><i class='fa fa-times'></i></button></td>
             </tr>`);
+
+            $(document).on("input", ".hsn", function() {
+    var hsn_value = $(this).val();
+    var hsn_length = hsn_value.length;
+    if (hsn_length > 7) {
+        $(this).val(hsn_value.substring(0, 7));
+        alert("HSN should not be more than 7 digits!");
+    }
+});
             $('#item_table').append(newRow);
         });
 
@@ -570,8 +565,58 @@ modalEl.addEventListener('click', (event) => {
         });
 
     });
+    
 
 </script>
+
+
+<script>
+  var parentElement = document.querySelector('#rows');
+
+  function validateHsn(inputField) {
+    var inputValue = inputField.value.trim();
+    var tickmark = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="#28a745"><path d="M15.23 3.3a1.08 1.08 0 0 0-1.46.1L6.45 11.6 2.23 7.37A1.08 1.08 0 1 0 .77 8.83l5.16 5.16a1.08 1.08 0 0 0 1.46.1l8.46-7.87a1.08 1.08 0 0 0-.1-1.56z"></path></svg>';
+
+    if (inputValue.length === 6 && /^\d+$/.test(inputValue)) {
+      inputField.classList.remove('is-invalid');
+      inputField.classList.add('is-valid');
+      inputField.insertAdjacentHTML('afterend', tickmark);
+    } else if (inputValue.length < 6) {
+      inputField.classList.remove('is-invalid');
+      inputField.classList.remove('is-valid');
+      inputField.nextElementSibling && inputField.nextElementSibling.remove();
+    } else {
+      inputField.classList.add('is-invalid');
+      inputField.classList.remove('is-valid');
+      inputField.insertAdjacentHTML('afterend', '<div class="invalid-feedback">Code should be less than 7 digits</div>');
+    }
+  }
+
+  parentElement.addEventListener('input', function(event) {
+    if (event.target && event.target.matches('input[name="hsn[]"]')) {
+      var inputField = event.target;
+      var inputValue = inputField.value.trim();
+
+      if (inputValue.length > 6) {
+        inputField.value = inputValue.substr(0, 6);
+        inputField.classList.add('is-invalid');
+        inputField.classList.remove('is-valid');
+        inputField.insertAdjacentHTML('afterend', '<div class="invalid-feedback">Code should be less than 7 digits</div>');
+      } else {
+        validateHsn(inputField);
+      }
+    }
+  });
+
+  document.querySelector('form').addEventListener('submit', function(event) {
+    var invalidFields = parentElement.querySelectorAll('input[name="hsn[]"].is-invalid');
+
+    if (invalidFields.length > 0) {
+      event.preventDefault(); // prevent the form from submitting
+    }
+  });
+</script>
+
 
 <script>
  $(document).ready(function() {
@@ -717,6 +762,28 @@ function test(taxamount) {
 </script>
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+<script>
+  $(document).on('change', '#customer_sel', function () {
+    var customer = $('#customer_sel').val();
+    console.log(customer);
+    $.ajax({
+        type: "GET",
+        url: "{% url 'customerdata' %}",
+        data: {
+            id: customer
+        },
+        success: function (response) {
+            console.log(response)
+            data7 = response.email
+            console.log(data7)
+            document.getElementById('cx_mail').value = data7
+        }
+    });
+});
+
+</script>
+
 <script>
     var place_of_supply='';
     $(document).ready(function () {
@@ -749,18 +816,20 @@ function test(taxamount) {
                     data6 = response.mail
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
-                    document.getElementById('rate1').value = data
+                   
+                    if ($('#tax1').data('pos') == '{{ company.state }}') {
+                // Show GST options
+                $('#tax1 optgroup[label="GST"]').show();
+                $('#tax1 optgroup[label="IGST"]').hide();
+            } else {
+                // Show IGST options
+                $('#tax1 optgroup[label="GST"]').hide();
+                $('#tax1 optgroup[label="IGST"]').show();
+            }
+              document.getElementById('rate1').value = data
                     document.getElementById('desc1').value = data4
                     document.getElementById('state').value = data5
                     document.getElementById('cx_mail').value = data6
-                    if (data3 == '{{ company.state }}') {
-                        document.getElementById('tgst1').innerHTML = data1 + ' % GST';
-                        document.getElementById('tgst1').value = data1
-
-                    }
-                    document.getElementById('tigst1').innerHTML = data2 + ' % IGST';
-                    document.getElementById('tigst1').value = data2
-
                 }
             });
 

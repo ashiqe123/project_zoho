@@ -32,7 +32,7 @@ urlpatterns = [
     path('payment_term',views.payment_term,name='payment_term'),
     path('add_cx',views.add_cx,name="add_cx"),
     path('emailattachment', EmailAttachementView.as_view(), name='emailattachment'),
-   
+    path('customerdata', views.customerdata, name='customerdata'),
 path('allestimates',views.allestimates,name='allestimates'),
 path('newestimate',views.newestimate,name='newestimate'),
     

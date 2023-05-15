@@ -665,6 +665,17 @@ def newestimate(request):
     pass
 
 
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+
+def customerdata(request):
+    customer_id = request.GET.get('id')
+    print(customer_id)
+    cust = customer.objects.get(customerName=customer_id)
+    data7 = {'email': cust.customerEmail}
+    
+    print(data7)
+    return JsonResponse(data7)
 
 
 
