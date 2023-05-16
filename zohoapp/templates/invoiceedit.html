@@ -24,19 +24,19 @@
 
 </style>
 <section >
-    <div class="row fixed-top  " style="top: 7rem; margin-left: 18rem;" >
+    <div class="row fixed-top  " style="top: 7rem; margin-left: 15rem;" >
      
-      <div class="col-md-10 " style=" position: fixed;">
+      <div class="col-md-12 " style="width: 100%;">
         
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
-<div class="row  ml-2">
-    <div class="col-md-3 "><a class="text-white" style="font-size: 1.5rem;"><i class="fa-solid fa-plus"></i> Edit
+<div class="row  ">
+    <div class="col-md-6"><a class="text-white" style="font-size: 1.5rem;"><i class="fa-solid fa-plus"></i> Edit
             Invoice</a></div>
             <input type="hidden" id="state" value="{{ company.state }}">
 </div>
-<div style="overflow-y: scroll;height: 600px;width: 75rem;">
-  <form method="post" action="{% url 'edited_prod' i.id %}" class="p-5">
+<div style="overflow-y: scroll;height: 600px;">
+  <form method="post" action="{% url 'edited_prod' i.id %}" >
     {% csrf_token %}
     <div class="row mb-4 border-top pt-5">
         <div class="col-sm-2"><label for="customer_name">Customer Name*</label></div>
@@ -93,7 +93,7 @@
   
   
     <table class="table  text-white" id="item_table" style="background-color: rgba(12, 12, 11, 0.8);" onchange="calc()">
-        <thead >
+        <thead style="width: 50%;" >
             <tr style="background-color: black;">
                 <th>Product</th>
                 <th class="text-right">Hsn</th>
@@ -104,14 +104,14 @@
                 <th class="text-right">Total</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody style="width: 50%;">
             {% for k in inv %}
             <tr id='row{{forloop.counter}}'>
             <input type="hidden" name="id[]" value="{{k.id}}">
                 <td>
                     <div class='form-group'><select
                             class='form-control  text-black border-0 item_select itm'
-                            name='item[]' id='item{{forloop.counter}}'style="width: 8rem;">
+                            name='item[]' id='item{{forloop.counter}}'style="">
                             <option class="text-dark" selected value="{{k.product}}">{{k.product}}</option>
                             {% for i in p %}
                             <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
@@ -121,16 +121,16 @@
                
                 <td class='text-right'><input type='text' id="hsn{{forloop.counter}}"
                   class='form-control border-0 text-black text-right hsn' name='hsn[]'
-                  value="{{k.hsn}}" style="width: 8rem;"  >
+                  value="{{k.hsn}}"  >
                 </td>
 
           <script>
                   $(document).on("input", ".hsn", function() {
                     var hsn_value = $(this).val();
                     var hsn_length = hsn_value.length;
-                    if (hsn_length > 7) {
-                        $(this).val(hsn_value.substring(0, 7));
-                        alert("HSN should not be more than 7 digits!");
+                    if (hsn_length > 6) {
+                        $(this).val(hsn_value.substring(0, 6));
+                        alert("HSN should not be more than 6 digits!");
                     }
                 });
           </script>
@@ -138,25 +138,35 @@
 
                 <td class='text-right'><input type='number' id='qty{{forloop.counter}}'
                   class='form-control border-0 text-black text-right qty'  name='quantity[]'
-                  value="{{k.quantity}}" onchange="calc()" style="width: 8rem;" >
+                  value="{{k.quantity}}" onchange="calc()"  >
                 </td>
 
                 <td class='text-right'><input type='number' id='rate{{forloop.counter}}'
                         class='form-control border-0 text-black text-right rate' name='rate[]'
-                        value="{{k.rate}}" style="width: 8rem;">
+                        value="{{k.rate}}" >
                 </td>
                 <td class='text-right'><input type='text' id='desc{{forloop.counter}}'
-                        class='form-control border-0 text-black text-right desc' value="{{k.desc}}" name='desc[]'style="width: 8rem;"
+                        class='form-control border-0 text-black text-right desc' value="{{k.desc}}" name='desc[]'
                         >
                 </td>
-                <td class='text-right'> <select name='tax[]'  id='tax{{forloop.counter}}'  style="width: 8rem;"
+                <td class='text-right'> <select name='tax[]'  id='tax{{forloop.counter}}'  
                         class='form-control  text-black text-right border-0 tax'>
                         <option selected >{{k.tax}}</option>
-                        <option >Select Tax</option>
-                        <option value="5">GST/IGST 5%</option>
-                        <option value="12">GST/IGST 12%</option>
-                        <option value="18">GST/IGST 18%</option>
-                        <option value="28">GST/IGST 28%</option>
+                        <option>Select Tax</option>
+                  <optgroup label="GST">
+                    <option value="0">GST 0%</option>
+                      <option value="5">GST 5%</option>
+                      <option value="12">GST 12%</option>
+                      <option value="18">GST 18%</option>
+                      <option value="28">GST 28%</option>
+                  </optgroup>
+                  <optgroup label="IGST">
+                    <option value="0">GST 0%</option>
+                      <option value="5">IGST 5%</option>
+                      <option value="12">IGST 12%</option>
+                      <option value="18">IGST 18%</option>
+                      <option value="28">GST 28%</option>
+                  </optgroup>
                      
                     </select></td>
                 <td style="display: none;">
@@ -164,7 +174,7 @@
                 </td>
                 <td class='text-right'><input type='number' id='amount{{forloop.counter}}'
                         class='form-control border-0 text-black text-right amount' name='amount[]'
-                        value="{{k.total}}" style="width: 8rem;" readonly></td>
+                        value="{{k.total}}" readonly></td>
                 <td class='text-center'><button type='button' id='del_btn{{forloop.counter}}'
                         class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
                         style='width:30px'><i class='fa fa-times'></i></button></td>
@@ -246,7 +256,7 @@
   
   
   
-    <div class="p-5">
+    <div class="" style="margin-bottom: 20rem;">
         <button type="submit" name="sd" class="btn btn-success text-white " 
             value="Save As Draft">Save as Draft</button>
         <button type="submit" name="sd" class="btn btn-warning text-white" 
@@ -269,32 +279,42 @@
                     <div class='form-group'>
                         <select
                             class='form-control  text-black border-0 item_select' name='item[]'
-                            id='item${RowCount}'style="width: 8rem;">
+                            id='item${RowCount}'>
                             {% for i in p %}
                             <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
                             {% endfor %}
                         </select></div>
                 </td>
-                <td class='text-right'><input type='text' id='hsn${RowCount}'style="width: 8rem;"
+                <td class='text-right'><input type='text' id='hsn${RowCount}'
                   class='form-control border-0 text-black text-right hsn' name='hsn[]'
                   value=''  >
                 </td>
                 <td class='text-right'><input type='number' id='qty${RowCount}'
-                        class='form-control border-0 text-black text-right qty'style="width: 8rem;" name='quantity[]' value='0' onchange="calc()">
+                        class='form-control border-0 text-black text-right qty' name='quantity[]' value='0' onchange="calc()">
                 </td>
                 <td class='text-right'><input type='number' id='rate${RowCount}'
-                        class='form-control border-0 text-black text-right rate'style="width: 8rem;" name='rate[]' value='0.00'
+                        class='form-control border-0 text-black text-right rate' name='rate[]' value='0.00'
                         ></td>
                 <td class='text-right'><input type='text' id='desc${RowCount}'
-                        class='form-control border-0 text-black text-right desc'style="width: 8rem;" name='desc[]' >
+                        class='form-control border-0 text-black text-right desc' name='desc[]' >
                 </td>
-                <td class='text-right'> <select name='tax[]'style="width: 8rem;" id='tax${RowCount}'
+                <td class='text-right'> <select name='tax[]' id='tax${RowCount}'
                         class="form-control  text-black text-right border-0 tax">
-                        <option >Select Tax</option>
-                        <option value="5">GST/IGST 5%</option>
-                        <option value="12">GST/IGST 12%</option>
-                        <option value="18">GST/IGST 18%</option>
-                        <option value="28">GST/IGST 28%</option>
+                        <option>Select Tax</option>
+                  <optgroup label="GST">
+                    <option value="0">GST 0%</option>
+                      <option value="5">GST 5%</option>
+                      <option value="12">GST 12%</option>
+                      <option value="18">GST 18%</option>
+                      <option value="28">GST 28%</option>
+                  </optgroup>
+                  <optgroup label="IGST">
+                    <option value="0">GST 0%</option>
+                      <option value="5">IGST 5%</option>
+                      <option value="12">IGST 12%</option>
+                      <option value="18">IGST 18%</option>
+                      <option value="28">GST 28%</option>
+                  </optgroup>
                     </select></td>
                 <td style="display: none;">
                     <input type="text" name='taxamount1' id="taxamount${RowCount}" class="form-control taxamount" />
@@ -308,9 +328,9 @@
             $(document).on("input", ".hsn", function() {
                     var hsn_value = $(this).val();
                     var hsn_length = hsn_value.length;
-                    if (hsn_length > 7) {
-                        $(this).val(hsn_value.substring(0, 7));
-                        alert("HSN should not be more than 7 digits!");
+                    if (hsn_length > 6) {
+                        $(this).val(hsn_value.substring(0, 6));
+                        alert("HSN should not be more than 6 digits!");
                     }
                 });
             $('#item_table').append(newRow);
@@ -500,19 +520,28 @@ function test(taxamount) {
                     data6 = response.mail
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
-                    document.getElementById('rate1').value = data
+              
+             
+                   document.getElementById('rate1').value = data
                     document.getElementById('desc1').value = data4
                     document.getElementById('state').value = data5
                     document.getElementById('cx_mail').value = data6
-                
-                    if (data3 == '{{ company.state }}') {
-                        document.getElementById('tgst1').innerHTML = data1 + ' % GST';
-                        document.getElementById('tgst1').value = data1
-
-                    }
-                    document.getElementById('tigst1').innerHTML = data2 + ' % IGST';
-                    document.getElementById('tigst1').value = data2
-
+                    console.log(data2,data1)
+                   
+                  
+                   // Assuming you have the customer state and company state values in variables
+                   var customerState = data3;
+                   var companyState = data5;
+               
+                   $(document).ready(function() {
+                       if (customerState === companyState) {
+                           $('#tax1 optgroup[label="GST"]').show();
+                           $('#tax1 optgroup[label="IGST"]').hide();
+                       } else {
+                           $('#tax1 optgroup[label="GST"]').hide();
+                           $('#tax1 optgroup[label="IGST"]').show();
+                       }
+                   });
                 }
             });
 
@@ -538,6 +567,20 @@ function test(taxamount) {
                     data5 = response.place
                     data4 = response.desc
                     data6 = response.mail
+
+                    var customerState = data3;
+                  var companyState = data5;
+              
+                  $(document).ready(function() {
+                      if (customerState === companyState) {
+                          $('#tax2 optgroup[label="GST"]').show();
+                          $('#tax2 optgroup[label="IGST"]').hide();
+                      } else {
+                          $('#tax2 optgroup[label="GST"]').hide();
+                          $('#tax2 optgroup[label="IGST"]').show();
+                      }
+                  });
+             
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate2').value = data
@@ -579,6 +622,22 @@ function test(taxamount) {
                     data6 = response.mail
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
+                    console.log(data2,data1)
+                   
+                  
+                   // Assuming you have the customer state and company state values in variables
+                   var customerState = data3;
+                   var companyState = data5;
+               
+                   $(document).ready(function() {
+                       if (customerState === companyState) {
+                           $('#tax3 optgroup[label="GST"]').show();
+                           $('#tax3 optgroup[label="IGST"]').hide();
+                       } else {
+                           $('#tax3 optgroup[label="GST"]').hide();
+                           $('#tax3 optgroup[label="IGST"]').show();
+                       }
+                   });
                     document.getElementById('rate3').value = data
                     document.getElementById('desc3').value = data4
                     document.getElementById('state').value = data5
@@ -617,6 +676,18 @@ function test(taxamount) {
                     data5 = response.place
                     data4 = response.desc
                     data6 = response.mail
+                    var customerState = data3;
+                   var companyState = data5;
+               
+                   $(document).ready(function() {
+                       if (customerState === companyState) {
+                           $('#tax4 optgroup[label="GST"]').show();
+                           $('#tax4 optgroup[label="IGST"]').hide();
+                       } else {
+                           $('#tax4 optgroup[label="GST"]').hide();
+                           $('#tax4 optgroup[label="IGST"]').show();
+                       }
+                   });
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate4').value = data
@@ -657,6 +728,18 @@ function test(taxamount) {
                     data5 = response.place
                     data4 = response.desc
                     data6 = response.mail
+                    var customerState = data3;
+                   var companyState = data5;
+               
+                   $(document).ready(function() {
+                       if (customerState === companyState) {
+                           $('#tax5 optgroup[label="GST"]').show();
+                           $('#tax5 optgroup[label="IGST"]').hide();
+                       } else {
+                           $('#tax5 optgroup[label="GST"]').hide();
+                           $('#tax5 optgroup[label="IGST"]').show();
+                       }
+                   });
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate5').value = data
@@ -697,6 +780,18 @@ function test(taxamount) {
                     data5 = response.place
                     data4 = response.desc
                     data6 = response.mail
+                    var customerState = data3;
+                   var companyState = data5;
+               
+                   $(document).ready(function() {
+                       if (customerState === companyState) {
+                           $('#tax6 optgroup[label="GST"]').show();
+                           $('#tax6 optgroup[label="IGST"]').hide();
+                       } else {
+                           $('#tax6 optgroup[label="GST"]').hide();
+                           $('#tax6 optgroup[label="IGST"]').show();
+                       }
+                   });
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate6').value = data
@@ -738,6 +833,18 @@ function test(taxamount) {
                     data5 = response.place
                     data4 = response.desc
                     data6 = response.mail
+                    var customerState = data3;
+                   var companyState = data5;
+               
+                   $(document).ready(function() {
+                       if (customerState === companyState) {
+                           $('#tax7 optgroup[label="GST"]').show();
+                           $('#tax7 optgroup[label="IGST"]').hide();
+                       } else {
+                           $('#tax7 optgroup[label="GST"]').hide();
+                           $('#tax7 optgroup[label="IGST"]').show();
+                       }
+                   });
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate7').value = data
@@ -779,6 +886,18 @@ function test(taxamount) {
                     data4 = response.desc
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
+                    var customerState = data3;
+                   var companyState = data5;
+               
+                   $(document).ready(function() {
+                       if (customerState === companyState) {
+                           $('#tax8 optgroup[label="GST"]').show();
+                           $('#tax8 optgroup[label="IGST"]').hide();
+                       } else {
+                           $('#tax8 optgroup[label="GST"]').hide();
+                           $('#tax8 optgroup[label="IGST"]').show();
+                       }
+                   });
                     document.getElementById('rate8').value = data
                     document.getElementById('desc8').value = data4
                     if (data3 == '{{ company.state }}') {
@@ -814,6 +933,18 @@ function test(taxamount) {
                     data2 = response.igst
                     data3 = response.pos
                     data4 = response.desc
+                    var customerState = data3;
+                   var companyState = data5;
+               
+                   $(document).ready(function() {
+                       if (customerState === companyState) {
+                           $('#tax9 optgroup[label="GST"]').show();
+                           $('#tax9 optgroup[label="IGST"]').hide();
+                       } else {
+                           $('#tax9 optgroup[label="GST"]').hide();
+                           $('#tax9 optgroup[label="IGST"]').show();
+                       }
+                   });
                     // place_of_supply=data3;
                     // console.log('pos:'+place_of_supply);
                     document.getElementById('rate9').value = data
@@ -837,6 +968,7 @@ function test(taxamount) {
     });
 
      </script>
+
 
 
 

@@ -7,12 +7,12 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <section  >
-    <div class="row fixed-top  " style="top: 7rem; margin-left: 18rem;" >
+    <div class="row fixed-top  " style="top: 7rem; margin-left: 15rem; position: fixed;" >
      
-      <div class="col-md-10 " style=" position: fixed;">
+      <div class="col-md-12 " style=" width: 100%;">
         <div class="col-md-3"><a class="text-white" style="font-size: 2rem;">Mail Invoice</a></div>
       
-        <div style="overflow-y: scroll;height: 600px;width: 75rem;">
+        <div style="overflow-y: scroll;height: 600px;">
           <br>
                 {% if error_message %}
                 <div class="alert alert-primary" role="alert">
@@ -21,10 +21,10 @@
                 {% endif %}
                 
                 {% if email_form %}
-                <form method="POST" action ="" enctype="multipart/form-data" style="width: 70rem;" >
+                <form method="POST" action ="" enctype="multipart/form-data" style="width: 90%;" >
                   {% csrf_token %}
                   {{email_form|crispy}}
-                <button type="submit" class="btn btn-primary">Send Email</button>
+                <button style="margin-bottom: 15rem;" type="submit" class="btn btn-primary">Send Email</button>
                 <br><br><br><br><br>
                 </form>
               

@@ -133,6 +133,14 @@ function hideAllSelect() {
                                 <label  class="col-sm-2 col-form-label">Account *</label>
                                 <div class="col-sm-10 col-md-7 col-9 ml-5">
                                     <select name="sel_acc" class="form-control">
+                                      <option value=""disabled class="btn btn-dark text-white" ><b>INCOME</b></option>
+                                      <option value="">General Income</option>
+                                      <option value="">Intrest Income</option>
+                                      <option value="">Late Fee Income</option>
+                                      <option value=""disabled class="btn btn-dark text-white" ><b>COST OF GOODS</b></option>
+                                      <option value="">Shipping Charge</option>
+                                      <option value="">Meterial Cost</option>
+                                      <option value="">Labour Cost</option> 
                                       {% for account_type in account_type %}
                                       <option value="" disabled class="btn btn-dark text-white"><b>{{ account_type }}</b></option>
                                           {% for account in account %}
@@ -176,8 +184,17 @@ function hideAllSelect() {
   
 </script>
                           
-            <select name="cost_acc" class="form-control">               
+            <select name="cost_acc" class="form-control">   
+              <option value=""disabled class="btn btn-dark text-white" ><b>EXPENSE</b></option>
+              <option value="">Shipping Charge</option>
+              <option value="">Meterial Cost</option>
+              <option value="">Labour Cost</option>       
+              <option value=""disabled class="btn btn-dark text-white" ><b>COST OF GOODS</b></option>
+              <option value="">Shipping Charge</option>
+              <option value="">Meterial Cost</option>
+              <option value="">Labour Cost</option>         
                    {% for account_type in account_types %}
+                
                      <option value="" disabled class="btn btn-dark text-white"><b>{{ account_type }}</b></option>
                          {% for account in accounts %}
                              {% if account.Account_type == account_type %}
