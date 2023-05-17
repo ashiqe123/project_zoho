@@ -79,36 +79,35 @@ def logout(request):
 @login_required(login_url='login')
 def base(request):
    
-    if request.method=='POST':
        
-        if not Unit.objects.filter(unit='BOX').exists():
+    if not Unit.objects.filter(unit='BOX').exists():
             Unit(unit='BOX').save()
-        if not Unit.objects.filter(unit='UNIT').exists():
+    if not Unit.objects.filter(unit='UNIT').exists():
             Unit(unit='UNIT').save()
-        if not Unit.objects.filter(unit='LITRE').exists():
+    if not Unit.objects.filter(unit='LITRE').exists():
             Unit(unit='LITRE').save()
 
-        if not Sales.objects.filter(Account_name='General Income').exists():
+    if not Sales.objects.filter(Account_name='General Income').exists():
             Sales(Account_type='INCOME',Account_name='General Income',Account_desc='salesincome').save()
-        if not Sales.objects.filter(Account_name='Intrest Income').exists():
+    if not Sales.objects.filter(Account_name='Intrest Income').exists():
             Sales(Account_type='INCOME',Account_name='Intrest Income',Account_desc='salesincome').save()
-        if not Sales.objects.filter(Account_name='Late fee Income').exists():
+    if not Sales.objects.filter(Account_name='Late fee Income').exists():
             Sales(Account_type='INCOME',Account_name='Late fee Income',Account_desc='salesincome').save()
-        if not Sales.objects.filter(Account_name='Discount Income').exists():
+    if not Sales.objects.filter(Account_name='Discount Income').exists():
             Sales(Account_type='INCOME',Account_name='Discount Income',Account_desc='salesincome').save()
-        if not Sales.objects.filter(Account_name='Other Charges').exists():
+    if not Sales.objects.filter(Account_name='Other Charges').exists():
             Sales(Account_type='INCOME',Account_name='Other Charges',Account_desc='salesincome').save()
-        if not Sales.objects.filter(Account_name='Shipping Charge').exists():
+    if not Sales.objects.filter(Account_name='Shipping Charge').exists():
             Sales(Account_type='INCOME',Account_name='Shipping Charge',Account_desc='salesincome').save()
 
 
-        if not  Purchase.objects.filter(Account_name='Advertising & Marketing').exists():
+    if not  Purchase.objects.filter(Account_name='Advertising & Marketing').exists():
             Purchase(Account_type='EXPENCES',Account_name='Advertising & Markting',Account_desc='Advertsing Exp').save()
-        if not Purchase.objects.filter(Account_name='Debit Charge').exists():
+    if not Purchase.objects.filter(Account_name='Debit Charge').exists():
             Purchase(Account_type='EXPENCES',Account_name='Debit Charge',Account_desc='Debited Exp').save()
-        if not Purchase.objects.filter(Account_name='Labour Charge').exists():
+    if not Purchase.objects.filter(Account_name='Labour Charge').exists():
             Purchase(Account_type='EXPENCES',Account_name='Labour Charge',Account_desc='Labour Exp').save()
-        if not Purchase.objects.filter(Account_name='Raw Meterials').exists():
+    if not Purchase.objects.filter(Account_name='Raw Meterials').exists():
             Purchase(Account_type='EXPENCES',Account_name='Raw Meterials',Account_desc='Raw Meterials Exp').save()
 
     company = company_details.objects.get(user = request.user)
