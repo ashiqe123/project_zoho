@@ -35,5 +35,8 @@ urlpatterns = [
     path('customerdata', views.customerdata, name='customerdata'),
 path('allestimates',views.allestimates,name='allestimates'),
 path('newestimate',views.newestimate,name='newestimate'),
+path('add_customer_for_invoice',views.add_customer_for_invoice,name='add_customer_for_invoice'),
+path('payment_term_for_invoice',views.payment_term_for_invoice,name='payment_term_for_invoice')
+
     
 ]

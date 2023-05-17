@@ -11,7 +11,7 @@
         
         <div class="col-md-3" style="border-right: 1px solid white;height: 100vh;">
           <div class="row">
-            <div class="col-md-6 mr-5"><a class="text-white" style="font-size: 1.5rem;">Invoices</a></div>
+            <div class="col-md-6 "><a class="text-white" style="font-size: 1.5rem;">Invoices</a></div>
             <div class="col-md-6 form-inline justify-content-end" ><a style="color: #ccc;width: 4rem;height: 2rem;margin-left: 5rem;" class="btn btn-success " href="{% url 'add_prod' %}"><i class="fa-solid fa-plus "></i>New</a>
              
             </div>
@@ -54,8 +54,8 @@
                 <a href=""  class="  text-dark mr-3" ><i class="fa fa-share-alt"></i>
  
                  Share</a>
-                <a href="" class="  text-dark mr-3" ><i class='fas fa-record-vinyl'></i>
-                 Record Payment</a>
+                <a href="{% url 'dele' invoice.id %}" class="  text-dark mr-3" ><i class='fas fa-record-vinyl'></i>
+                 Delete </a>
                 
                  <div class="dropdown" >
                

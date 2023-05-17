@@ -79,7 +79,38 @@ def logout(request):
 @login_required(login_url='login')
 def base(request):
    
-    
+    if request.method=='POST':
+       
+        if not Unit.objects.filter(unit='BOX').exists():
+            Unit(unit='BOX').save()
+        if not Unit.objects.filter(unit='UNIT').exists():
+            Unit(unit='UNIT').save()
+        if not Unit.objects.filter(unit='LITRE').exists():
+            Unit(unit='LITRE').save()
+
+        if not Sales.objects.filter(Account_name='General Income').exists():
+            Sales(Account_type='INCOME',Account_name='General Income',Account_desc='salesincome').save()
+        if not Sales.objects.filter(Account_name='Intrest Income').exists():
+            Sales(Account_type='INCOME',Account_name='Intrest Income',Account_desc='salesincome').save()
+        if not Sales.objects.filter(Account_name='Late fee Income').exists():
+            Sales(Account_type='INCOME',Account_name='Late fee Income',Account_desc='salesincome').save()
+        if not Sales.objects.filter(Account_name='Discount Income').exists():
+            Sales(Account_type='INCOME',Account_name='Discount Income',Account_desc='salesincome').save()
+        if not Sales.objects.filter(Account_name='Other Charges').exists():
+            Sales(Account_type='INCOME',Account_name='Other Charges',Account_desc='salesincome').save()
+        if not Sales.objects.filter(Account_name='Shipping Charge').exists():
+            Sales(Account_type='INCOME',Account_name='Shipping Charge',Account_desc='salesincome').save()
+
+
+        if not  Purchase.objects.filter(Account_name='Advertising & Marketing').exists():
+            Purchase(Account_type='EXPENCES',Account_name='Advertising & Markting',Account_desc='Advertsing Exp').save()
+        if not Purchase.objects.filter(Account_name='Debit Charge').exists():
+            Purchase(Account_type='EXPENCES',Account_name='Debit Charge',Account_desc='Debited Exp').save()
+        if not Purchase.objects.filter(Account_name='Labour Charge').exists():
+            Purchase(Account_type='EXPENCES',Account_name='Labour Charge',Account_desc='Labour Exp').save()
+        if not Purchase.objects.filter(Account_name='Raw Meterials').exists():
+            Purchase(Account_type='EXPENCES',Account_name='Raw Meterials',Account_desc='Raw Meterials Exp').save()
+
     company = company_details.objects.get(user = request.user)
     context = {
                 'company' : company
@@ -427,6 +458,7 @@ def dele(request,pk):
 @login_required(login_url='login')
 
 def add_prod(request):
+    sb=payment_terms.objects.all()
     c=customer.objects.all()
     p=AddItem.objects.all()
     i=invoice.objects.all()
@@ -501,6 +533,7 @@ def add_prod(request):
             'p':p,
             'i':i,
             'pay':pay,
+            'sb':sb,
     }       
     return render(request,'createinvoice.html',context)
 
@@ -761,3 +794,86 @@ class EmailAttachementView(View):
 #           "sel_price": "",
 #           "s_desc": ""
 #         })
+def add_customer_for_estimate(request):
+   
+    return render(request,'createinvoice.html',{'sb':sb})
+
+def add_customer_for_invoice(request):
+    pt=payment_terms.objects.all()
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            type=request.POST.get('type')
+            txtFullName=request.POST['txtFullName']
+            cpname=request.POST['cpname']
+           
+            email=request.POST.get('myEmail')
+            wphone=request.POST.get('wphone')
+            mobile=request.POST.get('mobile')
+            skname=request.POST.get('skname')
+            desg=request.POST.get('desg')      
+            dept=request.POST.get('dept')
+            wbsite=request.POST.get('wbsite')
+
+            gstt=request.POST.get('gstt')
+            posply=request.POST.get('posply')
+            tax1=request.POST.get('tax1')
+            crncy=request.POST.get('crncy')
+            obal=request.POST.get('obal')
+
+            select=request.POST.get('pterms')
+            pterms=payment_terms.objects.get(id=select)
+            pterms=request.POST.get('pterms')
+
+            plst=request.POST.get('plst')
+            plang=request.POST.get('plang')
+            fbk=request.POST.get('fbk')
+            twtr=request.POST.get('twtr')
+        
+            atn=request.POST.get('atn')
+            ctry=request.POST.get('ctry')
+            
+            addrs=request.POST.get('addrs')
+            addrs1=request.POST.get('addrs1')
+            bct=request.POST.get('bct')
+            bst=request.POST.get('bst')
+            bzip=request.POST.get('bzip')
+            bpon=request.POST.get('bpon')
+            bfx=request.POST.get('bfx')
+
+            sal=request.POST.get('sal')
+            ftname=request.POST.get('ftname')
+            ltname=request.POST.get('ltname')
+            mail=request.POST.get('mail')
+            bworkpn=request.POST.get('bworkpn')
+            bmobile=request.POST.get('bmobile')
+
+            bskype=request.POST.get('bskype')
+            bdesg=request.POST.get('bdesg')
+            bdept=request.POST.get('bdept')
+            u = User.objects.get(id = request.user.id)
+
+          
+            ctmr=customer(customerName=txtFullName,customerType=type,
+                        companyName=cpname,customerEmail=email,customerWorkPhone=wphone,
+                         customerMobile=mobile,skype=skname,designation=desg,department=dept,
+                           website=wbsite,GSTTreatment=gstt,placeofsupply=posply, Taxpreference=tax1,
+                             currency=crncy,OpeningBalance=obal,PaymentTerms=pterms,
+                                PriceList=plst,PortalLanguage=plang,Facebook=fbk,Twitter=twtr,
+                                 Attention=atn,country=ctry,Address1=addrs,Address2=addrs1,
+                                  city=bct,state=bst,zipcode=bzip,phone1=bpon,
+                                   fax=bfx,CPsalutation=sal,Firstname=ftname,
+                                    Lastname=ltname,CPemail=mail,CPphone=bworkpn,
+                                    CPmobile= bmobile,CPskype=bskype,CPdesignation=bdesg,
+                                     CPdepartment=bdept,user=u )
+            ctmr.save()  
+            
+            return redirect("add_prod")
+        return render(request,"createinvoice.html",)
+    
+def payment_term_for_invoice(request):
+    if request.method=='POST':
+        term=request.POST.get('term')
+        day=request.POST.get('day')
+        ptr=payment_terms(Terms=term,Days=day)
+        ptr.save()
+        return redirect("add_prod")
